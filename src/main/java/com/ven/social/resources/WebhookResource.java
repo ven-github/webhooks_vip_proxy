@@ -1,6 +1,5 @@
 package com.ven.social.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.EvictingQueue;
 import lombok.Data;
 
@@ -47,7 +46,7 @@ public abstract class WebhookResource {
 
     @GET
     @Path("/events")
-    public Response getEvents() throws JsonProcessingException {
+    public Response getEvents() {
         Event event = queue.poll();
         if (Objects.nonNull(event)) {
             Response.ResponseBuilder entity = Response.ok().entity(event.getBody());
