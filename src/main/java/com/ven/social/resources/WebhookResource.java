@@ -4,15 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.EvictingQueue;
 import lombok.Data;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public abstract class WebhookResource {
 
     private final EvictingQueue<Event> queue;
@@ -21,7 +23,7 @@ public abstract class WebhookResource {
 
         this.queue = EvictingQueue.create(bufferSize);
     }
-    
+
     /**
      * Authorizes incoming webhook events
      *
@@ -44,6 +46,7 @@ public abstract class WebhookResource {
     }
 
     @GET
+    @Path("/events")
     public Response getEvents() throws JsonProcessingException {
         Event event = queue.poll();
         if (Objects.nonNull(event)) {
